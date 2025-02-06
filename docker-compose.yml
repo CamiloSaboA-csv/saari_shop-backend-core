@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: mi-backend
+    restart: always
+    depends_on:
+      - db_postgres
+      - db_mongo
+    environment:
+      DB_HOST: db_postgres
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: mi_base
+      MONGO_URI: mongodb://mongouser:mongopass@db_mongo:27017
+    ports:
+      - "8080:8080"
+
+  db_postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mi_base
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  db_mongo:
+    image: mongo:6
+    container_name: mongo_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  postgres_data:
+  mongo_data:

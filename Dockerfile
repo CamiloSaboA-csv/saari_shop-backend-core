@@ -1,0 +1,29 @@
+# Etapa 1: Construcción de la aplicación en una imagen de Go
+FROM golang:1.24 AS builder
+
+# Configurar el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiar los archivos del backend
+COPY . .
+
+# Descargar dependencias y compilar el binario
+RUN go mod tidy && go build -o server
+
+# Etapa 2: Crear una imagen ligera para producción
+FROM alpine:latest
+
+# Instalar dependencias necesarias
+RUN apk add --no-cache ca-certificates
+
+# Definir el directorio de trabajo
+WORKDIR /root/
+
+# Copiar el binario compilado desde la imagen de construcción
+COPY --from=builder /app/server .
+
+# Exponer el puerto en el que correrá el backend
+EXPOSE 8080
+
+# Comando de inicio
+CMD ["./server"]
