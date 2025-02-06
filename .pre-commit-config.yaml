@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace  # Elimina espacios en blanco innecesarios
+      - id: end-of-file-fixer  # Asegura que los archivos terminen con una línea en blanco
+      - id: check-yaml  # Verifica que los archivos YAML sean válidos
+      - id: check-json  # Valida archivos JSON
+      - id: check-added-large-files  # Previene agregar archivos demasiado grandes
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.54.2
+    hooks:
+      - id: golangci-lint  # Ejecuta análisis de código en Go
